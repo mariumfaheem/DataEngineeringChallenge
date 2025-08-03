@@ -1,0 +1,88 @@
+services:
+  airflow:
+    build: .
+    container_name: airflow
+    restart: always
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
+      - AIRFLOW__WEBSERVER__BASE_URL=http://localhost:8080
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./src:/opt/airflow/src
+      - ./common:/opt/airflow/common
+      - ./database:/opt/airflow/database
+      - ./config.py:/opt/airflow/config.py
+      - ./airflow-data:/opt/airflow
+    working_dir: /opt/airflow
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "
+        airflow db init &&
+        airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.org --password admin &&
+        airflow scheduler & exec airflow webserver
+      "
+
+
+  db:
+    image: postgres
+    container_name: local_pgdb
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user-name
+      POSTGRES_PASSWORD: strong-password
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8887:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
+      PGADMIN_DEFAULT_PASSWORD: strong-password
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+  mongodb:
+    image: mongo:latest
+    container_name: de_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db # Persist data in a named volume
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: chatbot_db # Initial database to create
+    restart: always
+  metabase:
+    image: metabase/metabase:latest # Use the latest Metabase image
+    container_name: metabase
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: db # postgress DB
+      MB_DB_PORT: 5432
+      MB_DB_USER: user-name #  same user as PostgreSQL service
+      MB_DB_PASS: strong-password #  password as PostgreSQL service
+      MB_DB_DBNAME: metabase_db #metabase metadata database name
+    volumes:
+      - metabase_data:/metabase-data
+
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+  mongodb_data:
+  metabase_data:
