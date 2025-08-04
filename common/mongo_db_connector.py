@@ -6,7 +6,7 @@ from pymongo.errors import ConnectionFailure, ConfigurationError, PyMongoError
 
 def get_mongo_collection(connection_string, db_name, collection_name):
     if not all([connection_string, db_name, collection_name]):
-        print("Error: Connection string, database name, or collection name is missing.")
+        print("Error: Connection string, data name, or collection name is missing.")
         return None
 
     try:
@@ -16,7 +16,7 @@ def get_mongo_collection(connection_string, db_name, collection_name):
 
         db = client[db_name]
         collection = db[collection_name]
-        print(f"Successfully accessed database '{db_name}' and collection '{collection_name}'.")
+        print(f"Successfully accessed data '{db_name}' and collection '{collection_name}'.")
 
         return collection
 

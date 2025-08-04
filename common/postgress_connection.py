@@ -11,7 +11,7 @@ def get_postgres_engine(connection_string):
         engine = create_engine(connection_string)
 
         with engine.connect() as connection:
-            print("Connection to PostgreSQL database successful!")
+            print("Connection to PostgreSQL data successful!")
 
             result = connection.execute(text("SELECT version()"))
             db_version = result.scalar()
@@ -20,7 +20,7 @@ def get_postgres_engine(connection_string):
         return engine
 
     except Exception as e:
-        print(f"An error occurred while connecting to the database: {e}")
+        print(f"An error occurred while connecting to the data: {e}")
         return None
 
 

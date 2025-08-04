@@ -1,6 +1,6 @@
 #  Task 2:  Implementation - Orchestrate the pipeline
-I've created a total of 4 DAGs:
+I've created a total of 3 DAGs:
 
-1. End_to_End_Pipeline – This DAG covers the full flow from source all the way to the data warehouse (DWH). 
-2. The second approach breaks things down into more modular DAGs, where each one triggers the next. For example, data_acquisition reads data from the sources and writes it into the raw layer. Then it triggers another DAG called process_staging_data_to_dwh, which continues the pipeline – and so on.
-3. Dag schedular is @daily
+1. data acquisition landing.py– here assumption is data comingm from csv, mangoDB and API and i'm storing data into landing layer
+2. asset_portfolio_kpis: These are all the kpis i'm calcualting and storing it into data products layer for business to use it
+3. invoicing: it includes kpis which are required to calculate monhtly invocinf

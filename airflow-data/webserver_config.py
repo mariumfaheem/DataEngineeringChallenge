@@ -44,7 +44,7 @@ WTF_CSRF_TIME_LIMIT = None
 
 # The authentication type
 # AUTH_OID : Is for OpenID
-# AUTH_DB : Is for database
+# AUTH_DB : Is for data
 # AUTH_LDAP : Is for LDAP
 # AUTH_REMOTE_USER : Is for using REMOTE_USER from web server
 # AUTH_OAUTH : Is for OAuth

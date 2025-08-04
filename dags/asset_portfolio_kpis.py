@@ -129,70 +129,31 @@ ORDER BY
 
 """
 
+
 with DAG(
-    dag_id='data_aquisition.py',
+    dag_id='asset_portfolio_kpis_dag',
     start_date=datetime(2024, 7, 1),
     schedule_interval='@daily',
     catchup=False,
-    tags=['assets_forecast', 'weather_api'],
+    tags=['Asset and Portfolio Forecasting', 'Trading Performance Metrics','Imbalance Cost Analysis'],
 ) as dag:
 
-    # Task 1
-    assets_forecast_ = BashOperator(
-        task_id='assets_forecast_',
-        bash_command="""
-        export PYTHONPATH=/opt/airflow
-        python /opt/airflow/src/vpp/vpp_asset_portfolio_forecasts.py 
-        """,
-        do_xcom_push=True,
-    )
 
-    #task  2 - cleaning of final production data
-    dso_production_data_etl = BashOperator(
-        task_id='dso_production_data_etl',
-        bash_command="""
-        # Set python path to ensure modules are found correctly
-        export PYTHONPATH=/opt/airflow
-        python /opt/airflow/src/distribution_system_operator/ingest_dso_asset_production_data.py
-        """,
-        do_xcom_push=True,
-    )
-
+    #Task 1: Asset and Portfolio Forecasting
     run_postgres_etl = PostgresOperator(
         task_id="portfolio_performance",
-        postgres_conn_id="postgres_default",  # Replace with your connection ID from Airflow UI
+        postgres_conn_id="postgres_default",
         sql=portfolio_performance_t2_query,
     )
 
-    #task 3 -> master trade data
-    master_trade_data = BashOperator(
-        task_id='master_trade_data',
-        bash_command="""
-        # Set python path to ensure modules are found correctly
-        export PYTHONPATH=/opt/airflow
-        python /opt/airflow/src/exchange/ingest_exchange_trade_data.py 
-        """,
-        do_xcom_push=True,
-    )
-
+    #task 3 ->Trading Performance Metrics
     master_trade_data_query = PostgresOperator(
         task_id="trading_performance_metrics",
-        postgres_conn_id="postgres_default",  # Replace with your connection ID from Airflow UI
-        sql=portfolio_performance_t2_query,
+        postgres_conn_id="postgres_default",
+        sql=trading_performance_metrics_t3_query,
     )
 
-    # task 4 - Imbalance Cost Analysis
-
-    Imbalance_Cost_Analysis  = BashOperator(
-        task_id='Imbalance_Cost_Analysis',
-        bash_command="""
-        # Set python path to ensure modules are found correctly
-        export PYTHONPATH=/opt/airflow
-        python /opt/airflow/src/imbalance/ingest_imbalance_price.py 
-        """,
-        do_xcom_push=True,
-    )
-
+    # Task 4: Imbalance Cost Analysis
     imbalance_cost_analysis_query = PostgresOperator(
         task_id="imbalance_cost_analysis_query",
         postgres_conn_id="postgres_default",
@@ -200,8 +161,7 @@ with DAG(
     )
 
 
-    assets_forecast_ >> dso_production_data_etl >> run_postgres_etl >> master_trade_data >> master_trade_data_query
-    master_trade_data_query >>  Imbalance_Cost_Analysis >> imbalance_cost_analysis_query
+
 
 
 

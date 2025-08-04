@@ -6,10 +6,6 @@ import os
 load_dotenv()
 
 
-
-
-
-
 DB_USER = quote_plus(os.getenv("DB_USER"))
 DB_PASS = quote_plus(os.getenv("DB_PASSWORD"))
 DB_NAME = os.getenv("DB_NAME")
@@ -28,12 +24,10 @@ MONGO_CONNECTION_STRING = f"mongodb://{MONGO_DB_USER}:{MONGO_DB_PASSWORD}@{MONGO
 
 ASSET_IDS = ["SOL-DE-001","SOL-DE-002","WND-DE-001", "WND-DE-002","WND-DE-003"]
 
-
-
-if Path("/opt/airflow/database").exists():
-    BASE_DIR = Path("/opt/airflow/database")
+if Path("/opt/airflow/data").exists():
+    BASE_DIR = Path("/opt/airflow/data")
 else:
-    BASE_DIR = Path(__file__).resolve().parent.parent / "database"
+    BASE_DIR = Path(__file__).resolve().parent.parent / "data"
 
 assets_to_process = [
     (BASE_DIR / "/distribution_system_operator/final_production_MP-SOL-001_20250609.csv", "SOL-001"),
@@ -42,11 +36,6 @@ assets_to_process = [
     (BASE_DIR / "/distribution_system_operator/final_production_MP-WND-003_20250609.csv", "WND-003"),
 ]
 
-
-
 PRICE_ESTIMATION_FILE_PATH = BASE_DIR / "imbalance" / "imbalance_price_estimation_2025-06-07T041800Z.csv"
 PRICE_FINAL_FILE_PATH = BASE_DIR / "imbalance" / "imbalance_price_final_20250608_170800.csv"
-
-# PRICE_ESTIMATION_FILE_PATH = '/Users/Marium_Faheem/Library/CloudStorage/OneDrive-McKinsey&Company/Desktop/Mckinsey/DE-interviews/DataEngineeringChallenge-main/database/imbalance/imbalance_price_estimation_2025-06-07T041800Z.csv'
-# PRICE_FINAL_FILE_PATH="/Users/Marium_Faheem/Library/CloudStorage/OneDrive-McKinsey&Company/Desktop/Mckinsey/DE-interviews/DataEngineeringChallenge-main/database/imbalance/imbalance_price_final_20250608_170800.csv"
 

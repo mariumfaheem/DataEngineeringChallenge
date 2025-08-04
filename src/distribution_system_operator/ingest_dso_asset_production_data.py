@@ -45,7 +45,7 @@ def process_asset_batch(asset_list) -> list:
 
 def write_dataframes_to_db(engine, table_name: str, dataframes: list):
     """
-    Write merged DataFrame to the PostgreSQL database.
+    Write merged DataFrame to the PostgreSQL data.
     """
     if dataframes:
         merged_df = pd.concat(dataframes, ignore_index=True)
