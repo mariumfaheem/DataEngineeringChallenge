@@ -52,6 +52,9 @@ def return_redispatch_flag(mongo_conn_str, db_name, collection_name) -> pd.DataF
     collection = get_mongo_collection(mongo_conn_str, db_name, collection_name)
     df = pd.DataFrame(list(collection.find({})))
 
+    # Add the new asset_id column
+    df['asset_id'] = 'WND-003'
+
     # Convert _id to string
     if '_id' in df.columns:
         df['_id'] = df['_id'].astype(str)

@@ -9,7 +9,7 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 
 with DAG(
-    dag_id='data acquisition landing',
+    dag_id='data_acquisition_landing',
     start_date=datetime(2024, 7, 1),
     schedule_interval='@daily',
     catchup=False,

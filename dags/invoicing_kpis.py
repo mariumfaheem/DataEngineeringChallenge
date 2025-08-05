@@ -166,7 +166,38 @@ ORDER BY
 
 """
 
+redispatch_payout_t5_query= """
+    DROP TABLE IF EXISTS data_product.redispatch_payout;
 
+    CREATE TABLE data_product.redispatch_payout AS
+WITH ranked_forecasts AS (
+    SELECT
+        start_time_utc,
+        version_time_utc,
+        asset_id,
+        power,
+        -- This is the window function that does the magic
+        ROW_NUMBER() OVER(
+            PARTITION BY asset_id 
+            ORDER BY start_time_utc DESC
+        ) as rn
+    FROM
+        data_product.asset_forecasts 
+)
+
+
+SELECT
+    start_time_utc,
+    version_time_utc,
+    asset_id,
+    power*price_euro_per_mwh as redispatch_payout
+FROM
+    ranked_forecasts r
+	inner join landing.redispatch_compensation re on re.delivery_start_utc=r.start_time_utc
+WHERE
+    rn = 1;
+
+"""
 with DAG(
         dag_id='invoicing_pipeline.py',
         start_date=datetime(2024, 7, 1),
@@ -176,15 +207,21 @@ with DAG(
 ) as dag:
 
     infeed_payout_t5_query = PostgresOperator(
-        task_id="portfolio_performance",
+        task_id="infeed_payout",
         postgres_conn_id="postgres_default",
         sql=infeed_payout_t5_query,
     )
 
 
     fees_t5_query = PostgresOperator(
-        task_id="trading_performance_metrics",
+        task_id="fees",
         postgres_conn_id="postgres_default",
         sql=fees_t5_query,
     )
-    infeed_payout_t5_query >> fees_t5_query
+
+    redispatch_payout_t5_query = PostgresOperator(
+        task_id="redispatch_payout",
+        postgres_conn_id="postgres_default",
+        sql=redispatch_payout_t5_query,
+    )
+    infeed_payout_t5_query >> fees_t5_query >> redispatch_payout_t5_query

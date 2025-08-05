@@ -7,6 +7,16 @@ from common.mongo_db_connector import get_mongo_collection
 from common.postgress_connection import get_postgres_engine
 
 
+def normalize_asset_name(asset_name: str) -> str:
+    """
+    Clean and normalize asset names by removing or replacing certain prefixes and substrings.
+    """
+    if pd.isna(asset_name):
+        return None
+    if asset_name.startswith("MP-"):
+        asset_name = asset_name[3:]
+    return asset_name.replace("-DE-", "-")
+
 
 def return_assets_data(mongo_conn_str, db_name, collection_name) -> pd.DataFrame:
     """
