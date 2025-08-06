@@ -199,7 +199,7 @@ WHERE
 
 """
 with DAG(
-        dag_id='invoicing_pipeline.py',
+        dag_id='invoicing_pipeline_data_products',
         start_date=datetime(2024, 7, 1),
         schedule_interval='@daily',
         catchup=False,

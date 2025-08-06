@@ -68,8 +68,18 @@ with DAG(
         """,
         do_xcom_push=True,
     )
+    #Task 5: Invoice Generation : redispatch_landing
+    redispatch_landing_invoices  = BashOperator(
+        task_id='redispatch_landing',
+        bash_command="""
+        # Set python path to ensure modules are found correctly
+        export PYTHONPATH=/opt/airflow
+        python /opt/airflow/src/distribution_system_operator/redispatch_landing.py 
+        """,
+        do_xcom_push=True,
+    )
 
-    assets_forecast_ >> dso_production_data_etl >> ingest_exchange_trade_data >> ingest_imbalance_price >> assets_contract_invoices
+    assets_forecast_ >> dso_production_data_etl >> ingest_exchange_trade_data >> ingest_imbalance_price >> assets_contract_invoices >> redispatch_landing_invoices
 
 
 

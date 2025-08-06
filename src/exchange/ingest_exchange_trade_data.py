@@ -6,9 +6,6 @@ from common.postgress_connection import get_postgres_engine
 
 
 def merge_trade_collections(mongo_conn_str, db_name, private_collection, public_collection) -> pd.DataFrame:
-    """
-    Fetches and merges private and public trade data from MongoDB, tagging the source of each.
-    """
     private_cursor = get_mongo_collection(mongo_conn_str, db_name, private_collection)
     public_cursor = get_mongo_collection(mongo_conn_str, db_name, public_collection)
 
@@ -29,9 +26,6 @@ def merge_trade_collections(mongo_conn_str, db_name, private_collection, public_
 
 
 def write_dataframe_to_postgres(engine, table_name: str, schema_name: str, dataframe: pd.DataFrame):
-    """
-    Writes a DataFrame to a specified PostgreSQL table.
-    """
     dataframe.to_sql(
         name=table_name,
         con=engine,

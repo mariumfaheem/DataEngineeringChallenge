@@ -1,8 +1,8 @@
-## Assumption
+## Assumptions
 
-- data is store in mongoDB NoSQL database
-- I'm running these command to transfer data into mongoDB and in my script i will make assumption that assets_contracts data source is mongoDB
-
+- The data is stored in a MongoDB NoSQL database.
+- I am using the following commands to transfer data into MongoDB.
+- In my script, I assume that the `assets_contracts` data source is MongoDB.
 
 
 

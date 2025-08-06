@@ -1,9 +1,14 @@
-## Assumption
+## Assumptions
 
-- data is store in mongoDB NoSQL database
-- I'm running these command to transfer data into mongoDB and in my script i will make assumption that private_trade and public_trade data source is mongoDB
+### Final Production Data
 
+- The assumption is to read data from CSV files (e.g., stored on S3), process it, and store the results in the landing layer.
 
+### Redispatch Compensation
+
+- The data is stored in a MongoDB NoSQL database.
+- I am running commands to transfer the data into MongoDB.
+- In the script, it is assumed that the `assets_contracts` data source resides in MongoDB.
 
 ```
 

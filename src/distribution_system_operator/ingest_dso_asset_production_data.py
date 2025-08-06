@@ -5,18 +5,12 @@ from common.postgress_connection import get_postgres_engine
 
 
 def normalize_asset_name(asset_name: str) -> str:
-    """
-    Clean and normalize asset names by removing or replacing certain prefixes and substrings.
-    """
     if asset_name.startswith("MP-"):
         asset_name = asset_name[3:]
     return asset_name.replace("-DE-", "-")
 
 
 def load_and_format_asset_csv(asset_url: str, asset_id: str) -> pd.DataFrame:
-    """
-    Load CSV from a URL and format it with standard column names and an added asset_id.
-    """
     df = pd.read_csv(asset_url)
     rename_mapping = {
         df.columns[0]: 'delivery_start_utc',
@@ -28,9 +22,6 @@ def load_and_format_asset_csv(asset_url: str, asset_id: str) -> pd.DataFrame:
 
 
 def process_asset_batch(asset_list) -> list:
-    """
-    Process a list of (url, asset_name) pairs into a list of formatted DataFrames.
-    """
     processed_dfs = []
     for url, custom_asset_name in asset_list:
         try:
@@ -44,9 +35,6 @@ def process_asset_batch(asset_list) -> list:
 
 
 def write_dataframes_to_db(engine, table_name: str, dataframes: list):
-    """
-    Write merged DataFrame to the PostgreSQL data.
-    """
     if dataframes:
         merged_df = pd.concat(dataframes, ignore_index=True)
         merged_df.to_sql(

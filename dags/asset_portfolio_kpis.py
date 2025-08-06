@@ -97,11 +97,11 @@ SELECT
     d.start_time_utc,
     d.asset_id,
 
-    -- Calculate the imbalance volume in Megawatts (MW) by converting from Kilowatts (kW)
+    -- imbalance volume in Megawatts (MW) by converting from Kilowatts (kW)
     (d.actual_power_kw - d.forecasted_power_kw) / 1000.0 AS imbalance_volume_mw,
 
-    -- This is the main logic for calculating the penalty
-    -- It uses the imbalance volume and applies the correct price based on the rules
+
+    -- logic for calculating the penalty: It uses the imbalance volume and applies the correct price based on the rules
     CASE
         -- Rule 1: Use the final price if it is available (fp.start_time_utc is not null)
         WHEN fp.date IS NOT NULL THEN
@@ -159,6 +159,8 @@ with DAG(
         postgres_conn_id="postgres_default",
         sql=imbalance_cost_analysis_t4_query,
     )
+
+    run_postgres_etl >> master_trade_data_query >> imbalance_cost_analysis_query
 
 
 

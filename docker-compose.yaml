@@ -61,7 +61,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: user
       MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: chatbot_db # Initial data to create
+      MONGO_INITDB_DATABASE: flexpower
     restart: always
   metabase:
     image: metabase/metabase:latest # Use the latest Metabase image
@@ -72,11 +72,11 @@ services:
     environment:
 
       MB_DB_TYPE: postgres
-      MB_DB_HOST: db # postgress DB
+      MB_DB_HOST: db
       MB_DB_PORT: 5432
-      MB_DB_USER: user-name #  same user as PostgreSQL service
-      MB_DB_PASS: strong-password #  password as PostgreSQL service
-      MB_DB_DBNAME: metabase_db #metabase metadata data name
+      MB_DB_USER: user-name
+      MB_DB_PASS: strong-password
+      MB_DB_DBNAME: metabase_db
     volumes:
       - metabase_data:/metabase-data
 

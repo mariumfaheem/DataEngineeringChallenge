@@ -1,16 +1,12 @@
 import argparse
 import pandas as pd
-import numpy as np
-from sqlalchemy.types import String, Numeric, Integer
 from config import MONGO_CONNECTION_STRING, MONGO_DB_NAME, POSTGRESQL_CONNECTION_STRING
 from common.mongo_db_connector import get_mongo_collection
 from common.postgress_connection import get_postgres_engine
 
 
 def normalize_asset_name(asset_name: str) -> str:
-    """
-    Clean and normalize asset names by removing or replacing certain prefixes and substrings.
-    """
+
     if pd.isna(asset_name):
         return None
     if asset_name.startswith("MP-"):
@@ -19,9 +15,6 @@ def normalize_asset_name(asset_name: str) -> str:
 
 
 def return_redispatch_compensation(mongo_conn_str, db_name, collection_name) -> pd.DataFrame:
-    """
-    Fetches data from MongoDB and converts it to a pandas DataFrame with corrected datatypes.
-    """
     collection = get_mongo_collection(mongo_conn_str, db_name, collection_name)
     df = pd.DataFrame(list(collection.find({})))
 
@@ -43,33 +36,30 @@ def return_redispatch_compensation(mongo_conn_str, db_name, collection_name) -> 
 
     return df
 
-#redispatch_flag
+
 
 def return_redispatch_flag(mongo_conn_str, db_name, collection_name) -> pd.DataFrame:
-    """
-    Fetches data from MongoDB and converts it to a pandas DataFrame with corrected datatypes.
-    """
     collection = get_mongo_collection(mongo_conn_str, db_name, collection_name)
     df = pd.DataFrame(list(collection.find({})))
 
-    # Add the new asset_id column
+    #because this data is only for WND-003
     df['asset_id'] = 'WND-003'
 
-    # Convert _id to string
+
     if '_id' in df.columns:
         df['_id'] = df['_id'].astype(str)
 
-    # Normalize column names
+
     df.columns = df.columns.str.lower()
 
-    # Convert date strings to datetime
+
     if 'delivery_start' in df.columns:
         df['delivery_start'] = pd.to_datetime(df['delivery_start'], errors='coerce')
 
     if 'delivery_end' in df.columns:
         df['delivery_end'] = pd.to_datetime(df['delivery_end'], errors='coerce')
 
-    # Ensure is_redispatched is integer
+
     if 'is_redispatched' in df.columns:
         df['is_redispatched'] = pd.to_numeric(df['is_redispatched'], downcast='integer', errors='coerce')
 
@@ -79,10 +69,6 @@ def return_redispatch_flag(mongo_conn_str, db_name, collection_name) -> pd.DataF
 
 
 def write_dataframe_to_postgres(engine, table_name: str, schema_name: str, dataframe: pd.DataFrame):
-    """
-    Writes a DataFrame to a specified PostgreSQL table, defining column types.
-    """
-
     dataframe.to_sql(
         name=table_name,
         con=engine,

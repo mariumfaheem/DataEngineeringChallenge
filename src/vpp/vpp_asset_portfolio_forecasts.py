@@ -8,18 +8,12 @@ from src.vpp.client import get_forecast
 
 
 def normalize_asset_id(asset_id: str) -> str:
-    """
-    Normalize asset ID by removing known prefixes and formatting.
-    """
     if asset_id.startswith("MP-"):
         asset_id = asset_id[3:]
     return asset_id.replace("-DE-", "-")
 
 
 def fetch_asset_forecasts(asset_ids, version_timestamp) -> pd.DataFrame:
-    """
-    Fetch forecast data for each asset ID and return a combined DataFrame.
-    """
     all_forecasts = []
 
     for asset_id in asset_ids:
@@ -43,16 +37,10 @@ def fetch_asset_forecasts(asset_ids, version_timestamp) -> pd.DataFrame:
 
 
 def aggregate_portfolio_forecast(asset_forecasts: pd.DataFrame) -> pd.DataFrame:
-    """
-    Aggregate power forecasts by timestamp to compute portfolio-level forecast.
-    """
     return asset_forecasts.groupby('start_time_utc')[['power']].sum().reset_index()
 
 
 def write_to_postgres(df: pd.DataFrame, engine, table_name: str, schema: str = "data_product"):
-    """
-    Write a DataFrame to PostgreSQL.
-    """
     df.to_sql(
         name=table_name,
         con=engine,

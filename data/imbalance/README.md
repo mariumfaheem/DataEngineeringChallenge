@@ -1,9 +1,8 @@
-## Assumption
+## Assumptions
 
-- data is store in mongoDB NoSQL database
-- I'm running these command to transfer data into mongoDB and in my script i will make assumption that imbalance_price_estimation and imbalance_price_final data source is mongoDB
-
-
+- The data is stored in a MongoDB NoSQL database.
+- I am running commands to transfer the data into MongoDB.
+- In the script, it is assumed that the `imbalance_price_estimation` and `imbalance_price_final` data sources are in MongoDB.
 
 ```
 docker cp "/Users/Marium_Faheem/Library/CloudStorage/OneDrive-McKinsey&Company/Desktop/Mckinsey/DE-interviews/DataEngineeringChallenge-main/database/imbalance/imbalance_price_estimation_2025-06-07T041800Z.csv" de_mongodb:/tmp/imbalance_price_estimation_2025-06-07T041800Z.csv

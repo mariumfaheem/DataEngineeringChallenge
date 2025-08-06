@@ -9,18 +9,12 @@ from common.postgress_connection import get_postgres_engine
 
 
 def load_and_format_csv(file_path: str, column_mapping: dict) -> pd.DataFrame:
-    """
-    Reads a CSV file, parses dates, and renames columns according to the provided mapping.
-    """
     df = pd.read_csv(file_path, sep=';', decimal=',')
     df['Datum'] = pd.to_datetime(df['Datum'], format='%d.%m.%Y')
     return df.rename(columns=column_mapping)
 
 
 def write_dataframe_to_postgres(engine, table_name: str, schema_name: str, dataframe: pd.DataFrame):
-    """
-    Writes the given DataFrame to the specified PostgreSQL table.
-    """
     dataframe.to_sql(
         name=table_name,
         schema=schema_name,
@@ -42,10 +36,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    # PostgreSQL engine
     engine = get_postgres_engine(POSTGRESQL_CONNECTION_STRING)
 
-    # Column mappings
+
     column_mapping_estimation = {
         'Datum': 'date',
         'Zeitzone': 'timezone',
@@ -70,10 +63,9 @@ if __name__ == '__main__':
         'reBAP ueberdeckt': 'rebap_surplus'
     }
 
-    # Load and write estimation data
+
     estimation_df = load_and_format_csv(PRICE_ESTIMATION_FILE_PATH, column_mapping_estimation)
     write_dataframe_to_postgres(engine, args.price_estimation_target_table, args.db_schema, estimation_df)
 
-    # Load and write final data
     final_df = load_and_format_csv(PRICE_FINAL_FILE_PATH, column_mapping_final)
     write_dataframe_to_postgres(engine, args.price_final_target_table, args.db_schema, final_df)

@@ -5,7 +5,6 @@ from pathlib import Path
 import os
 load_dotenv()
 
-
 DB_USER = quote_plus(os.getenv("DB_USER"))
 DB_PASS = quote_plus(os.getenv("DB_PASSWORD"))
 DB_NAME = os.getenv("DB_NAME")

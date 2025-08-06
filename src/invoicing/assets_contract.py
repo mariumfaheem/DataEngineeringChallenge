@@ -1,6 +1,5 @@
 import argparse
 import pandas as pd
-import numpy as np
 from sqlalchemy.types import String, Numeric, Integer
 from config import MONGO_CONNECTION_STRING, MONGO_DB_NAME, POSTGRESQL_CONNECTION_STRING
 from common.mongo_db_connector import get_mongo_collection
@@ -8,9 +7,6 @@ from common.postgress_connection import get_postgres_engine
 
 
 def normalize_asset_name(asset_name: str) -> str:
-    """
-    Clean and normalize asset names by removing or replacing certain prefixes and substrings.
-    """
     if pd.isna(asset_name):
         return None
     if asset_name.startswith("MP-"):
@@ -19,9 +15,6 @@ def normalize_asset_name(asset_name: str) -> str:
 
 
 def return_assets_data(mongo_conn_str, db_name, collection_name) -> pd.DataFrame:
-    """
-    Fetches data from MongoDB and converts it to a pandas DataFrame.
-    """
     assets_data = get_mongo_collection(mongo_conn_str, db_name, collection_name)
     assets_data_df = pd.DataFrame(list(assets_data.find({})))
 
@@ -33,12 +26,7 @@ def return_assets_data(mongo_conn_str, db_name, collection_name) -> pd.DataFrame
 
 
 def clean_and_transform_data(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cleans data and enforces correct data types for the DataFrame columns.
-    This prevents errors when writing to SQL.
-    """
     print("Cleaning and transforming data...")
-    # Define columns and their target numeric types
     numeric_cols = {
         'price': float,
         'fee': float,
@@ -47,10 +35,8 @@ def clean_and_transform_data(df: pd.DataFrame) -> pd.DataFrame:
 
     for col, _ in numeric_cols.items():
         if col in df.columns:
-            # Chain .fillna(0) to replace any coerced NaN values with 0
             df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
 
-    # Normalize asset_id after cleaning other fields
     if 'asset_id' in df.columns:
         df['asset_id'] = df['asset_id'].apply(normalize_asset_name)
 
@@ -58,9 +44,6 @@ def clean_and_transform_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def write_dataframe_to_postgres(engine, table_name: str, schema_name: str, dataframe: pd.DataFrame):
-    """
-    Writes a DataFrame to a specified PostgreSQL table, defining column types.
-    """
     sql_type_mapping = {
         'contract_id': String(255),
         'asset_id': String(255),
