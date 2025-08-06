@@ -64,9 +64,9 @@ This matrix connects the **Roles** to the **Resources** with specific **Permissi
 
 
 #### Query to Create Role and Grant Least Previleges 
+ * **Create the roles:**
 
-
-      * **Create the roles:**
+      * 
         ```sql
         CREATE ROLE data_engineer;
         CREATE ROLE data_analyst;
