@@ -51,25 +51,58 @@ docker-compose up --build -d
 │   ├── mongo_db_connector.py
 │   └── postgress_connection.py
 ├── dags/
-│   ├── app/
-│   └── end_to_end_pipeline.py
+│   └── app/
+│       ├── asset_portfolio_kpis.py
+│       ├── data_acquisition_landing.py
+│       ├── invoicing_kpis.py
+│       └── README.md
 ├── data/
 ├── flex/
 ├── src/
 │   ├── distribution_system_operator/
+│   │   ├── data_products/
+│   │   ├── domain_description/
+│   │   ├── __init__.py
+│   │   ├── ingest_dso_asset_production_data.py
+│   │   ├── redispatch_landing.py
+│   │   └── README.md
 │   ├── exchange/
+│   │   ├── data_products/
+│   │   ├── domain_description/
+│   │   ├── ingest_exchange_trade_data.py
+│   │   └── README.md
 │   ├── imbalance/
+│   │   ├── data_products/
+│   │   ├── domain_description/
+│   │   ├── ingest_imbalance_price.py
+│   │   └── README.md
 │   ├── invoicing/
+│   │   ├── data_products/
+│   │   ├── domain_description/
+│   │   ├── __init__.py
+│   │   ├── assets_contract.py
+│   │   └── README.md
 │   └── vpp/
-│       └── __init__.py
+│       ├── data_products/
+│       ├── domain_description/
+│       ├── live_measured_infeed/
+│       ├── technical_data/
+│       ├── __init__.py
+│       ├── client.py
+│       ├── vpp_asset_portfolio_forecasts.py
+│       └── README.md
+├── task-6-reporting-and-dashboard/
+├── Task-7-Data-Permissions-Framework.md
 ├── .env
 ├── .gitignore
 ├── .pre-commit-config.yaml
 ├── config.py
 ├── docker-compose.yaml
 ├── Dockerfile
+├── img.png
 ├── requirements.txt
 └── README.md
+
 
 
 ```
@@ -90,7 +123,8 @@ Module level documentation is present in each module under src.
 5. Vpp
 
 
-### Data Permissions Framework
-
-A detailed data perimision and governancne framework os also present in 
-
+* ### Data Permissions Framework
+* 
+* A detailed data perimision and governancne framework is also present in src module
+* 
+* 
